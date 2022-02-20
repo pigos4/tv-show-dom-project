@@ -1,3 +1,19 @@
-#root {
-  color: red;
+#root{
+display: flex;
+flex-wrap: wrap;
+}
+.singleMovie{
+  width: 100%;
+}
+
+
+@media screen and (min-width: 400px){
+  
+  .singleMovie{
+  width: 23%;
+  padding: 1%;
+
+}
+  
+  
 }
