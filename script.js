@@ -1,28 +1,24 @@
 const allEpisodes = getAllEpisodes();
 const rootElem = document.getElementById("root");
 
+const formatNumbers = (num) => (num < 10 ? `0${num}` : num.toString());
+const formatTitle = ({ name, season, number }) =>
+  `${name} S${formatNumbers(season)}E${formatNumbers(number)}`;
+
 function render(arrOfIndexToRender) {
   arrOfIndexToRender.forEach((e) => {
-    
     const divContainer = document.createElement("div");
     const pName = document.createElement("p");
     const pSummary = document.createElement("p");
     const img = document.createElement("img");
-divContainer.classList.add('singleMovie');
-    const singleObj = allEpisodes[e];
+    divContainer.classList.add("singleMovie");
+    const { image, summary } = (movie = allEpisodes[e]);
 
-    pName.innerText =
-      singleObj.name +
-      " S" +
-      ("0" + singleObj.season).slice(-2) +
-      "E" +
-      ("0" + singleObj.number).slice(-2);
-    img.src = singleObj.image.medium;
-    pSummary.innerHTML = singleObj.summary;
-rootElem.appendChild(divContainer);
-    divContainer.appendChild(pName);
-    divContainer.appendChild(img);
-    divContainer.appendChild(pSummary);
+    pName.innerText = formatTitle(movie);
+    img.src = image.medium;
+    pSummary.innerHTML = summary;
+    rootElem.appendChild(divContainer);
+    divContainer.append(pName, img, pSummary);
   });
 }
 const clearChildren = () => {
@@ -31,4 +27,5 @@ const clearChildren = () => {
   }
 };
 render(allEpisodes.map((v, i) => i));
+
 render([1, 2, 3]);
