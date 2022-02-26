@@ -1,3 +1,8 @@
+header{
+  display: flex;
+  flex-direction: column;
+}
+
 #movieCatalogue{
 display: flex;
 flex-wrap: wrap;
@@ -9,6 +14,10 @@ flex-wrap: wrap;
 
 @media screen and (min-width: 400px){
   
+header{
+  flex-direction: row;
+}
+
   .singleMovie{
   width: 23%;
   padding: 1%;
