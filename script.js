@@ -146,7 +146,7 @@ function renderAmountMovies(arrOfIndexToRender) {
 }
 movieCataloguePublisher.subscribe(renderAmountMovies);
 
-const fetchShow = (url = "https://api.tvmaze.com/shows/82/episodes") => {
+const fetchShow = (url) => {
   fetch(url).then((res) => {
     res.json().then((data) => {
       movieCatalogueData.set(data);
@@ -154,9 +154,9 @@ const fetchShow = (url = "https://api.tvmaze.com/shows/82/episodes") => {
   });
 };
 
-window.onload = function () {
-  //fetchShow();
-};
+// window.onload = function () {
+  
+// };
 
 const showsListData = {
   mc: [],
@@ -184,7 +184,7 @@ const renderShows = (arrayOfShows) => {
   arrayOfShows.forEach(
     ({ name, image, summary, genres, status, rating, runtime, id }) => {
       const divContainer = document.createElement("div");
-      const pName = document.createElement("p");
+      const h2NameTitle = document.createElement("h2");
       const pSummary = document.createElement("p");
       const img = document.createElement("img");
       const unorderedList = document.createElement("ul");
@@ -197,7 +197,7 @@ const renderShows = (arrayOfShows) => {
       const spanMoreText = document.createElement("span");
       spanMoreText.id = `more${id}`;
       pSummary.innerHTML = summary.substring(100, summary.length - 4);
-
+divContainer.className = "textStyle";
       spanDots.id = `dot${id}`;
       spanDots.innerText = "...";
       spanDots.style.display = "inline";
@@ -208,21 +208,20 @@ const renderShows = (arrayOfShows) => {
 
       divContainer.classList.add("singleMovie");
       divContainer.style.border = "0.2vw rgb(82, 80, 80) solid";
-      pName.innerText = name;
-      pName.classList = "color";
+      h2NameTitle.innerText = name;
       img.src = image.medium;
 
       spanMoreText.innerHTML = summary
         .replace(/<p>|<\/p>/g, "")
         .substring(0, 100);
       pSummary.style.display = "none";
-      liGenres.innerText = genres.toString();
-      liStatus.innerText = status;
-      liRating.innerText = rating.average;
-      liRuntime.innerText = runtime;
+      liGenres.innerText = `Genres: ${genres.join(', ')}`;
+      liStatus.innerText = `Status: ${status}`;
+      liRating.innerText = `Rating average: ${rating.average}`;
+      liRuntime.innerText = `Runtime :${runtime}`;
 
       divContainer.append(
-        pName,
+        h2NameTitle,
         img,
         spanMoreText,
         pSummary,
