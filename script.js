@@ -3,6 +3,7 @@ const movieCatalogue = document.getElementById("movieCatalogue");
 const selectMoviesElement = document.getElementById("selectMovies");
 const selectShows = document.getElementById("selectShows");
 const amountResult = document.getElementById("amountResult");
+const searchShows = document.getElementById("searchShows");
 // Utils
 const formatNumbers = (num) => (num < 10 ? `0${num}` : num.toString());
 
@@ -96,6 +97,8 @@ function MovieCataloguePublisher() {
 
 function selectMovies() {
   clearChildren(selectMoviesElement);
+  selectMoviesElement.style.display = "flex";
+  searchBar.style.display = "flex";
   const optionShowAll = document.createElement("option");
   optionShowAll.text = "Show all movies";
   optionShowAll.value = "";
@@ -152,5 +155,133 @@ const fetchShow = (url = "https://api.tvmaze.com/shows/82/episodes") => {
 };
 
 window.onload = function () {
-  fetchShow();
+  //fetchShow();
 };
+
+const showsListData = {
+  mc: [],
+  set(mc) {
+    this.showsList = mc;
+  },
+  get() {
+    return this.showsList;
+  },
+};
+function readMoreReadLess(dots, moreText, btnText) {
+  if (dots.style.display === "none") {
+    dots.style.display = "inline";
+    btnText.innerHTML = "Read more";
+    moreText.style.display = "none";
+  } else {
+    dots.style.display = "none";
+    btnText.innerHTML = "Read less";
+    moreText.style.display = "inline";
+  }
+}
+
+const renderShows = (arrayOfShows) => {
+  clearChildren(movieCatalogue);
+  arrayOfShows.forEach(
+    ({ name, image, summary, genres, status, rating, runtime, id }) => {
+      const divContainer = document.createElement("div");
+      const pName = document.createElement("p");
+      const pSummary = document.createElement("p");
+      const img = document.createElement("img");
+      const unorderedList = document.createElement("ul");
+      const liGenres = document.createElement("li");
+      const liStatus = document.createElement("li");
+      const liRating = document.createElement("li");
+      const liRuntime = document.createElement("li");
+      const buttonReadMore = document.createElement("button");
+      const spanDots = document.createElement("span");
+      const spanMoreText = document.createElement("span");
+      spanMoreText.id = `more${id}`;
+      pSummary.innerHTML = summary.substring(100, summary.length - 4);
+
+      spanDots.id = `dot${id}`;
+      spanDots.innerText = "...";
+      spanDots.style.display = "inline";
+
+      buttonReadMore.id = "btnReadMore";
+      buttonReadMore.innerText = "Read More";
+      buttonReadMore.style.display = "inline";
+
+      divContainer.classList.add("singleMovie");
+      divContainer.style.border = "0.2vw rgb(82, 80, 80) solid";
+      pName.innerText = name;
+      pName.classList = "color";
+      img.src = image.medium;
+
+      spanMoreText.innerHTML = summary
+        .replace(/<p>|<\/p>/g, "")
+        .substring(0, 100);
+      pSummary.style.display = "none";
+      liGenres.innerText = genres.toString();
+      liStatus.innerText = status;
+      liRating.innerText = rating.average;
+      liRuntime.innerText = runtime;
+
+      divContainer.append(
+        pName,
+        img,
+        spanMoreText,
+        pSummary,
+        spanDots,
+        buttonReadMore,
+        unorderedList,
+        liGenres,
+        liStatus,
+        liRating,
+        liRuntime
+      );
+      movieCatalogue.appendChild(divContainer);
+      divContainer.value = id;
+      buttonReadMore.addEventListener("click", () => {
+        readMoreReadLess(spanDots, pSummary, buttonReadMore);
+        console.log(summary);
+      });
+      img.addEventListener("click", () => {
+        searchShows.value = "";
+        clearChildren(selectMoviesElement);
+        fetchShow(
+          `https://api.tvmaze.com/shows/${divContainer.value}/episodes`
+        );
+        movieCataloguePublisher.unsubscribe(renderShows);
+      });
+    }
+  );
+};
+
+(function fetchDataShows() {
+  const url = "https://api.tvmaze.com/shows";
+  fetch(url).then((res) => {
+    res.json().then((data) => {
+      showsListData.set(data.sort((a, b) => a.name.localeCompare(b.name)));
+
+      renderShows(showsListData.get());
+    });
+  });
+})();
+
+searchShows.addEventListener("input", (e) => {
+  selectMoviesElement.style.display = "none";
+  searchBar.style.display = "none";
+  const showsFiltered = showsListData
+    .get()
+    .filter(({ name, genres, summary }) => {
+      return (
+        name.toLowerCase().includes(e.target.value) ||
+        genres
+          .map((v) => v.toLowerCase())
+          .includes(e.target.value.toLowerCase()) ||
+        summary.toLowerCase().includes(e.target.value.toLowerCase())
+      );
+    });
+
+  renderShows(showsFiltered);
+  amountResult.innerText = `(${showsFiltered.length}/${
+    showsListData.get().length
+  })`;
+
+  showsFiltered;
+});

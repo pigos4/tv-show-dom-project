@@ -10,6 +10,24 @@ flex-wrap: wrap;
 .singleMovie{
   width: 100%;
 }
+#selectMovies{
+  display: none;
+}
+#searchBar{
+  display: none;
+}
+#more {display: none;}
+
+#dots{
+  display :"inline"
+}
+body{
+  background-color: rgb(151, 151, 151);
+}
+.color{
+  color: rgb(82, 80, 80);
+}
+
 
 
 @media screen and (min-width: 400px){
@@ -19,7 +37,7 @@ header{
 }
 
   .singleMovie{
-  width: 23%;
+  width: 22%;
   padding: 1%;
 
 }
