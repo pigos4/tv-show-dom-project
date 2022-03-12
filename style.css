@@ -1,3 +1,61 @@
-#root {
-  color: red;
+header {
+  display: flex;
+  flex-direction: column;
+}
+
+#movieCatalogue {
+  display: flex;
+  flex-wrap: wrap;
+}
+.singleMovie {
+  width: 100%;
+}
+.singleMovie img {
+  width: 100%;
+}
+li {
+  list-style-type: none;
+}
+h2 {
+  text-align: center;
+}
+#btnReadMore {
+  background-color: white;
+  color: rgb(72, 135, 176);
+  border: 0.2vw solid rgb(72, 135, 176);
+}
+#btnReadMore:hover {
+  background-color: rgb(251, 238, 193);
+  border: 0.2vw solid rgb(24, 119, 182);
+}
+#selectMovies {
+  display: none;
+}
+#searchBar {
+  display: none;
+}
+#more {
+  display: none;
+}
+
+#dots {
+  display: "inline";
+}
+body {
+  background-color: rgb(72, 135, 176);
+}
+.textStyle {
+  color: rgb(255, 255, 255);
+  font-family: "Varela Round", sans-serif;
+}
+
+@media screen and (min-width: 400px) {
+  header {
+    flex-direction: row;
+  }
+
+  .singleMovie {
+    width: 22%;
+    padding: 1%;
+  }
 }
